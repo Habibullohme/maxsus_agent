@@ -1,0 +1,20 @@
+# Linux noutbuk/serverda agentni doimiy ishlatish (systemd user service).
+# O'rnatish:
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/maxsus-agent.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now maxsus-agent
+#   loginctl enable-linger $USER   # tizimga kirmagan paytda ham ishlashi uchun
+[Unit]
+Description=Maxsus shaxsiy agent (Telegram bot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=%h/maxsus_agent
+ExecStart=%h/maxsus_agent/.venv/bin/python -m agent telegram
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
